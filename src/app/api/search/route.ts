@@ -3,6 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { generateBRoll } from '@/lib/falGenerator';
 import { createBroadcast, pollVideo, uploadAudio } from '@/lib/heygenRenderer';
 import { generateSpeech } from '@/lib/elevenlabs';
+import redis from '@/lib/redis';
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -11,8 +12,15 @@ const client = new Anthropic({
 export async function POST(req: NextRequest) {
   try {
     const { query } = await req.json();
+    const cacheKey = `axis:search:${query.toLowerCase().trim()}`;
 
-    // 1. Claude writes the broadcast script for this query
+    // 1. Try Cache
+    if (process.env.UPSTASH_REDIS_REST_URL) {
+      const cached = await redis.get(cacheKey);
+      if (cached) return NextResponse.json(cached);
+    }
+
+    // 2. Claude writes the broadcast script for this query
     const msg = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 1024,
@@ -34,11 +42,11 @@ export async function POST(req: NextRequest) {
     const text = msg.content[0].type === 'text' ? msg.content[0].text : '{}';
     const script = JSON.parse(text.replace(/```json|```/g, '').trim());
 
-    // 2. Generate B-roll
+    // 3. Generate B-roll
     const brollUrl = await generateBRoll(script.fal_prompt);
     const scriptText = script.scriptText || script.lead;
 
-    // 3. Optional: ElevenLabs Voice Pipeline
+    // 4. Optional: ElevenLabs Voice Pipeline
     let audioAssetId: string | undefined;
     if (process.env.ELEVENLABS_API_KEY) {
       try {
@@ -51,11 +59,18 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 4. Render video using HeyGen
+    // 5. Render video using HeyGen
     const videoId  = await createBroadcast(scriptText, brollUrl, audioAssetId);
     const videoUrl = await pollVideo(videoId);
 
-    return NextResponse.json({ ...script, videoUrl, brollUrl });
+    const result = { ...script, videoUrl, brollUrl };
+
+    // 6. Store in Cache (12 hours)
+    if (process.env.UPSTASH_REDIS_REST_URL) {
+      await redis.set(cacheKey, JSON.stringify(result), { ex: 43200 });
+    }
+
+    return NextResponse.json(result);
   } catch (error: any) {
     console.error('[AXIS SEARCH API] Generation failed:', error);
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
