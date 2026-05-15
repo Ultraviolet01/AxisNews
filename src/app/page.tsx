@@ -280,7 +280,11 @@ export default function AxisNews() {
       }
     }
     getNews();
-  }, [section]);
+
+    // Auto-refresh every 2 hours
+    const interval = setInterval(getNews, 2 * 60 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [section, searchMode]);
 
   // Auto-set edition based on time of day
   useEffect(() => {
@@ -615,8 +619,8 @@ export default function AxisNews() {
                 { label:"News Fetched",    done:true  },
                 { label:"Script Written",  done:true  },
                 { label:"Footage Sourced", done:true  },
-                { label:"HeyGen Rendered", done:edition==="morning" },
-                { label:"Next: 9:00 PM",   done:false, scheduled:true },
+                { label:"HeyGen Rendered", done:!!newsData || edition==="morning" },
+                { label:`Next: ${new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`, done:false, scheduled:true },
               ].map(item=>(
                 <div key={item.label} style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"6px" }}>
                   <div style={{ width:"5px", height:"5px", borderRadius:"50%", background:item.scheduled?"rgba(255,255,255,.15)":item.done?"#34D399":"#FBBF24", flexShrink:0, animation:(!item.done&&!item.scheduled)?"blink 1s infinite":"none" }}/>
