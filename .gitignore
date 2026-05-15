@@ -42,3 +42,11 @@ next-env.d.ts
 
 # axis cache
 cache/
+
+# test scripts
+test-*.js
+check-eleven.js
+diag.js
+list-models.js
+scratch_test_news.js
+task.md
