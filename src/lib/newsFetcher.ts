@@ -83,7 +83,7 @@ async function tailorNews(section: string, articles: any[]) {
     const now = new Date().toLocaleString();
     console.log(`[AXIS] Tailoring top stories for ${section} (Current Time: ${now})...`);
     const msg = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 1024,
       messages: [{
         role: 'user',

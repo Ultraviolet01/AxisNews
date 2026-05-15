@@ -47,6 +47,17 @@ const TICKER = [
   "🎙️ Live: ARIA interactive session available for every story",
 ];
 
+const CATEGORY_VISUALS: Record<string, string> = {
+  world: "https://images.unsplash.com/photo-1526770662015-d45296cb3643?auto=format&fit=crop&q=80&w=2000",
+  tech: "https://images.unsplash.com/photo-1518770666314-d8134a360655?auto=format&fit=crop&q=80&w=2000",
+  business: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2000",
+  crypto: "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&q=80&w=2000",
+  politics: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=2000",
+  stocks: "https://images.unsplash.com/photo-1611974714851-48206138473c?auto=format&fit=crop&q=80&w=2000",
+  sports: "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=2000",
+  entertainment: "https://images.unsplash.com/photo-1514525253344-3ef3f946e9f1?auto=format&fit=crop&q=80&w=2000",
+};
+
 export default function AxisNews() {
   const [section, setSection] = useState("world");
   const [edition, setEdition] = useState("morning");
@@ -301,24 +312,30 @@ export default function AxisNews() {
             {/* Scan line */}
             <div style={{ position:"absolute", left:0, right:0, height:"1px", background:`linear-gradient(90deg,transparent,${accent}35,transparent)`, animation:"scan 5s linear infinite", pointerEvents:"none", zIndex:2 }}/>
 
+            {/* Background Visual (Category Fallback) */}
+            {!playing && (
+              <div style={{ position:"absolute", inset:0, background:`linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.8)), url(${CATEGORY_VISUALS[section] || CATEGORY_VISUALS.world})`, backgroundSize:"cover", backgroundPosition:"center", zIndex:1 }} />
+            )}
+
             {/* Real Video Element */}
             <video
               ref={videoRef}
               key={data.videoUrl}
               src={data.videoUrl}
+              poster={CATEGORY_VISUALS[section] || CATEGORY_VISUALS.world}
               loop
               muted={false}
               playsInline
-              style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:1, opacity: playing ? 1 : 0.4, transition: "opacity 0.5s ease" }}
+              style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:1, opacity: playing && data.videoUrl ? 1 : 0, transition: "opacity 0.8s ease" }}
             />
 
-            {/* Avatar center placeholder (only shows when not playing or video loading) */}
-            {!playing && (
+            {/* Avatar center placeholder (only shows when not playing or video missing) */}
+            {(!playing || !data.videoUrl) && (
               <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"14px", zIndex:2 }}>
                 <div style={{ width:"88px", height:"88px", borderRadius:"50%", background:`linear-gradient(135deg,${accent}35,rgba(167,139,250,.25))`, border:`2px solid ${accent}45`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"26px", transition:"all .3s", boxShadow:`0 0 30px ${accent}30` }}>
                   🎙️
                 </div>
-                <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:"10px", color:"rgba(255,255,255,.35)", letterSpacing:"3px" }}>TAP TO WATCH</span>
+                <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:"10px", color:"rgba(255,255,255,.35)", letterSpacing:"3px" }}>{searching ? "GENERATING..." : data.videoUrl ? "TAP TO WATCH" : "READY TO BROADCAST"}</span>
               </div>
             )}
 
@@ -358,7 +375,7 @@ export default function AxisNews() {
           </div>
 
           {/* LEAD */}
-          <div style={{ padding:"16px", background:"rgba(255,255,255,.015)", borderRadius:"8px", borderLeft:`3px solid ${accent}`, border:`1px solid rgba(255,255,255,.06)`, borderLeftColor:accent, marginBottom:"14px", transition:"border-color .3s" }}>
+          <div style={{ padding:"16px", background:"rgba(255,255,255,.015)", borderRadius:"8px", borderTop:"1px solid rgba(255,255,255,.06)", borderBottom:"1px solid rgba(255,255,255,.06)", borderRight:"1px solid rgba(255,255,255,.06)", borderLeft:`3px solid ${accent}`, borderLeftColor:accent, marginBottom:"14px", transition:"border-color .3s" }}>
             <p style={{ fontSize:"14px", lineHeight:1.75, color:"rgba(255,255,255,.6)", margin:0, fontWeight:300 }}>{data.lead}</p>
           </div>
 
