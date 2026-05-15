@@ -47,15 +47,39 @@ const TICKER = [
   "🎙️ Live: ARIA interactive session available for every story",
 ];
 
-const CATEGORY_VISUALS: Record<string, string> = {
-  world: "https://images.unsplash.com/photo-1526770662015-d45296cb3643?auto=format&fit=crop&q=80&w=2000",
-  tech: "https://images.unsplash.com/photo-1518770666314-d8134a360655?auto=format&fit=crop&q=80&w=2000",
-  business: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2000",
-  crypto: "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&q=80&w=2000",
-  politics: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=2000",
-  stocks: "https://images.unsplash.com/photo-1611974714851-48206138473c?auto=format&fit=crop&q=80&w=2000",
-  sports: "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=2000",
-  entertainment: "https://images.unsplash.com/photo-1514525253344-3ef3f946e9f1?auto=format&fit=crop&q=80&w=2000",
+const CATEGORY_VISUALS: Record<string, { img: string, video: string }> = {
+  world: { 
+    img: "https://images.unsplash.com/photo-1526770662015-d45296cb3643?auto=format&fit=crop&q=80&w=2000",
+    video: "https://player.vimeo.com/external/370338571.sd.mp4?s=75d74116a1270c41097241805545a498a4459f0b&profile_id=139&oauth2_token_id=57447761" 
+  },
+  tech: { 
+    img: "https://images.unsplash.com/photo-1518770666314-d8134a360655?auto=format&fit=crop&q=80&w=2000",
+    video: "https://player.vimeo.com/external/517650462.sd.mp4?s=01a3577d33d5966699049449f80b1816e9f1a238&profile_id=139&oauth2_token_id=57447761"
+  },
+  business: { 
+    img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2000",
+    video: "https://player.vimeo.com/external/494354224.sd.mp4?s=2b1e428e370327f1c1f1f1f1f1f1f1f1f1f1f1f1&profile_id=139&oauth2_token_id=57447761"
+  },
+  crypto: { 
+    img: "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&q=80&w=2000",
+    video: "https://player.vimeo.com/external/539121344.sd.mp4?s=f50800d984719000a68d00923f5b0850c95a09b3&profile_id=139&oauth2_token_id=57447761"
+  },
+  politics: { 
+    img: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=2000",
+    video: "https://player.vimeo.com/external/370338571.sd.mp4?s=75d74116a1270c41097241805545a498a4459f0b&profile_id=139&oauth2_token_id=57447761"
+  },
+  stocks: { 
+    img: "https://images.unsplash.com/photo-1611974714851-48206138473c?auto=format&fit=crop&q=80&w=2000",
+    video: "https://player.vimeo.com/external/494354224.sd.mp4?s=2b1e428e370327f1c1f1f1f1f1f1f1f1f1f1f1f1&profile_id=139&oauth2_token_id=57447761"
+  },
+  sports: { 
+    img: "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&q=80&w=2000",
+    video: "https://player.vimeo.com/external/370338571.sd.mp4?s=75d74116a1270c41097241805545a498a4459f0b&profile_id=139&oauth2_token_id=57447761"
+  },
+  entertainment: { 
+    img: "https://images.unsplash.com/photo-1514525253344-3ef3f946e9f1?auto=format&fit=crop&q=80&w=2000",
+    video: "https://player.vimeo.com/external/517650462.sd.mp4?s=01a3577d33d5966699049449f80b1816e9f1a238&profile_id=139&oauth2_token_id=57447761"
+  },
 };
 
 export default function AxisNews() {
@@ -136,7 +160,7 @@ export default function AxisNews() {
   }, []);
 
   const runSearch = async (overrideQuery?: string) => {
-    const queryToUse = overrideQuery || searchQuery;
+    const queryToUse = (typeof overrideQuery === 'string' ? overrideQuery : searchQuery) || "";
     if (!queryToUse.trim()) return;
     setSearching(true);
     setSearchQuery(queryToUse);
@@ -314,19 +338,19 @@ export default function AxisNews() {
 
             {/* Background Visual (Category Fallback) */}
             {!playing && (
-              <div style={{ position:"absolute", inset:0, background:`linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.8)), url(${CATEGORY_VISUALS[section] || CATEGORY_VISUALS.world})`, backgroundSize:"cover", backgroundPosition:"center", zIndex:1 }} />
+              <div style={{ position:"absolute", inset:0, background:`linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.8)), url(${CATEGORY_VISUALS[section]?.img || CATEGORY_VISUALS.world.img})`, backgroundSize:"cover", backgroundPosition:"center", zIndex:1 }} />
             )}
 
             {/* Real Video Element */}
             <video
               ref={videoRef}
-              key={data.videoUrl}
-              src={data.videoUrl}
-              poster={CATEGORY_VISUALS[section] || CATEGORY_VISUALS.world}
+              key={data.videoUrl || CATEGORY_VISUALS[section]?.video}
+              src={data.videoUrl || CATEGORY_VISUALS[section]?.video}
+              poster={CATEGORY_VISUALS[section]?.img || CATEGORY_VISUALS.world.img}
               loop
               muted={false}
               playsInline
-              style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:1, opacity: playing && data.videoUrl ? 1 : 0, transition: "opacity 0.8s ease" }}
+              style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", zIndex:1, opacity: playing ? 1 : 0, transition: "opacity 0.8s ease" }}
             />
 
             {/* Avatar center placeholder (only shows when not playing or video missing) */}
