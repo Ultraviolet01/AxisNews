@@ -335,10 +335,24 @@ export default function AxisNews() {
         .card:hover{background:rgba(255,255,255,.03)!important;transform:translateX(2px)}
         .pill:hover{opacity:1!important}
         .cta:hover{background:rgba(255,255,255,.06)!important}
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+          .main-grid { grid-template-columns: 1fr !important; }
+          .side-panel { border-left: none !important; border-top: 1px solid rgba(255,255,255,.04) !important; }
+        }
+        @media (max-width: 768px) {
+          header { padding: 10px 16px !important; }
+          .search-container { display: none !important; }
+          .search-mode-active .search-container { display: block !important; position: absolute; top: 100%; left: 0; right: 0; z-index: 100; background: #050508; padding: 10px; border-bottom: 1px solid rgba(255,255,255,.1); }
+          .mobile-hide { display: none !important; }
+          .player-container { padding: 12px !important; }
+          .video-headline { fontSize: 18px !important; }
+        }
       `}</style>
 
       {/* ── HEADER ────────────────────────────────────────────────────── */}
-      <header style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 24px", borderBottom:"1px solid rgba(255,255,255,.06)", background:"rgba(5,5,8,.97)", position:"sticky", top:0, zIndex:99 }}>
+      <header className={searchOpen ? "search-mode-active" : ""} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"12px 24px", borderBottom:"1px solid rgba(255,255,255,.06)", background:"rgba(5,5,8,.97)", position:"sticky", top:0, zIndex:99 }}>
         <div style={{ display:"flex", alignItems:"center", gap:"14px" }}>
           <span onClick={clearSearch} style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"26px", letterSpacing:"5px", color:accent, transition:"color .3s", cursor:"pointer" }}>AXIS</span>
           <div style={{ width:"1px", height:"18px", background:"rgba(255,255,255,.08)" }}/>
@@ -356,7 +370,7 @@ export default function AxisNews() {
         </div>
 
         {/* SEARCH BAR */}
-        <div style={{ flex:1, maxWidth:"420px", margin:"0 20px", position:"relative" }}>
+        <div className="search-container" style={{ flex:1, maxWidth:"420px", margin:"0 20px", position:"relative" }}>
           {searchOpen ? (
             <div style={{ display:"flex", gap:"8px", animation:"fadeUp .15s ease" }}>
               <div style={{ flex:1, display:"flex", alignItems:"center", background:"rgba(255,255,255,.05)", border:`1px solid ${accent}40`, borderRadius:"8px", padding:"0 12px", gap:"8px" }}>
@@ -388,7 +402,7 @@ export default function AxisNews() {
           )}
         </div>
 
-        <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+        <div className="mobile-hide" style={{ display:"flex", alignItems:"center", gap:"10px" }}>
           <span style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:"12px", color:"rgba(255,255,255,.35)" }}>{time}</span>
         </div>
       </header>
@@ -424,10 +438,10 @@ export default function AxisNews() {
       </div>
 
       {/* ── MAIN GRID ─────────────────────────────────────────────────── */}
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 360px", minHeight:"calc(100vh - 156px)", borderTop:"1px solid rgba(255,255,255,.03)" }}>
+      <div className="main-grid" style={{ display:"grid", gridTemplateColumns:"1fr 360px", minHeight:"calc(100vh - 156px)", borderTop:"1px solid rgba(255,255,255,.03)" }}>
 
         {/* LEFT — Player + Lead */}
-        <div style={{ padding:"24px", background:"#050508", animation:"fadeUp .3s ease" }}>
+        <div className="player-container" style={{ padding:"24px", background:"#050508", animation:"fadeUp .3s ease" }}>
 
           {/* VIDEO PLAYER */}
           <div onClick={()=>{
@@ -492,7 +506,7 @@ export default function AxisNews() {
                 <div style={{ padding:"2px 8px", background:accent, borderRadius:"2px", fontSize:"8px", fontWeight:700, color:"#050508", fontFamily:"'JetBrains Mono',monospace", letterSpacing:"1px" }}>{active?.label?.toUpperCase()}</div>
                 <span style={{ fontSize:"10px", color:"rgba(255,255,255,.35)", fontFamily:"'JetBrains Mono',monospace" }}>ARIA · AI ANCHOR</span>
               </div>
-              <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"21px", letterSpacing:".3px", color:"#F0EEE9", lineHeight:1.2 }}>{data.headline}</div>
+              <div className="video-headline" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:"21px", letterSpacing:".3px", color:"#F0EEE9", lineHeight:1.2 }}>{data.headline}</div>
             </div>
 
             {/* Progress bar */}
@@ -557,7 +571,7 @@ export default function AxisNews() {
         </div>
 
         {/* RIGHT — Story List */}
-        <div style={{ background:"#050508", borderLeft:"1px solid rgba(255,255,255,.04)" }}>
+        <div className="side-panel" style={{ background:"#050508", borderLeft:"1px solid rgba(255,255,255,.04)" }}>
           <div style={{ padding:"14px 20px 12px", borderBottom:"1px solid rgba(255,255,255,.05)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
             <span style={{ fontSize:"10px", fontFamily:"'JetBrains Mono',monospace", color:"rgba(255,255,255,.3)", letterSpacing:"2px" }}>TOP STORIES</span>
             <div style={{ display:"flex", gap:"8px", alignItems:"center" }}>
