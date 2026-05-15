@@ -177,6 +177,35 @@ export default function AxisNews() {
       });
       const parsed = await res.json();
       setSearchResult(parsed);
+
+      // Start client-side polling if we have a sessionId
+      if (parsed.sessionId) {
+        let attempts = 0;
+        const poll = async () => {
+          if (attempts > 60) return; // Timeout after 10 mins
+          try {
+            const statusRes = await fetch(`/api/video-status?id=${parsed.sessionId}`);
+            const statusData = await statusRes.json();
+            
+            if (statusData.status === "completed" && statusData.videoUrl) {
+              setSearchResult((prev: any) => ({ ...prev, videoUrl: statusData.videoUrl }));
+              return;
+            }
+            
+            if (statusData.status === "failed") {
+              console.error("HeyGen render failed");
+              return;
+            }
+            
+            attempts++;
+            setTimeout(poll, 10000); // Poll every 10s
+          } catch (err) {
+            console.error("Polling error:", err);
+            setTimeout(poll, 10000);
+          }
+        };
+        poll();
+      }
     } catch (e) {
       setSearchResult({ error: true, headline: "Could not generate news", lead: "The ARIA generation pipeline encountered an error. Please try again.", stories: [], section: "world" });
     }

@@ -103,6 +103,31 @@ export async function pollVideo(sessionId: string): Promise<string> {
 }
 
 /**
+ * Checks the status of a Video Agent session or Video ID.
+ */
+export async function getBroadcastStatus(id: string): Promise<{ status: string; videoUrl?: string }> {
+  try {
+    // 1. Try checking as a session first
+    const sessRes = await axios.get(`${HEYGEN_BASE}/v3/video-agents/${id}`, { headers });
+    const { status: sessStatus, video_id } = sessRes.data.data;
+
+    if (sessStatus === 'failed') return { status: 'failed' };
+    
+    // 2. If we have a video_id, check the video status
+    if (video_id) {
+      const vidRes = await axios.get(`${HEYGEN_BASE}/v3/videos/${video_id}`, { headers });
+      const { status: vidStatus, video_url } = vidRes.data.data;
+      return { status: vidStatus, videoUrl: video_url };
+    }
+
+    return { status: sessStatus };
+  } catch (err: any) {
+    console.error(`[AXIS] Status check error for ${id}:`, err.message);
+    return { status: 'failed' };
+  }
+}
+
+/**
  * Uploads an audio buffer to HeyGen assets.
  */
 export async function uploadAudio(audioBuffer: Buffer): Promise<string> {

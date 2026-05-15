@@ -59,13 +59,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 5. Render video using HeyGen
-    const videoId  = await createBroadcast(scriptText, brollUrl, audioAssetId);
-    const videoUrl = await pollVideo(videoId);
+    // 5. Trigger HeyGen Broadcast (Return sessionId immediately to avoid timeout)
+    const sessionId = await createBroadcast(scriptText, brollUrl, audioAssetId);
 
-    const result = { ...script, videoUrl, brollUrl };
+    const result = { ...script, sessionId, brollUrl };
 
-    // 6. Store in Cache (12 hours)
+    // 6. Store in Cache (12 hours) - Note: videoUrl is now handled client-side
     if (process.env.UPSTASH_REDIS_REST_URL) {
       await redis.set(cacheKey, JSON.stringify(result), { ex: 43200 });
     }
