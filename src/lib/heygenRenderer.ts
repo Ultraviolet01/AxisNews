@@ -7,66 +7,74 @@ const headers = {
 };
 
 /**
- * Creates a video using the HeyGen V3 Direct Video API.
- * This API provides maximum control over the avatar, engine, and backgrounds.
+ * Creates a video using the HeyGen V3 Video Agent API.
+ * This allows HeyGen to automatically select/generate a female avatar and handle the layout.
  */
 export async function createBroadcast(promptOrScript: string, brollUrl: string, audioAssetId?: string): Promise<string> {
   try {
-    const avatarId = process.env.HEYGEN_AVATAR_ID || 'Aria_in_a_suit_front';
-    const engineType = process.env.HEYGEN_ENGINE || 'avatar_iv'; // 'avatar_v' for high quality
-    const captionStyle = process.env.HEYGEN_CAPTION_STYLE || 'default';
-
     const payload: any = {
-      type: 'avatar',
-      avatar_id: avatarId,
-      // If we have pre-recorded audio (from ElevenLabs), use it. 
-      // Otherwise, we fallback to text-to-speech script.
-      ...(audioAssetId ? { audio_asset_id: audioAssetId } : { script: promptOrScript }),
+      // By omitting avatar_id, we let the Video Agent choose/generate one.
+      // We specify our preference for a female anchor in the prompt.
+      prompt: `Create a professional news broadcast about the following topic: ${promptOrScript}. 
+               The presenter MUST be a professional-looking female news anchor. 
+               ${audioAssetId ? 'Use the attached audio file for the presenter\'s speech.' : ''}
+               ${brollUrl ? `Incorporate this visual style or footage: ${brollUrl}` : ''}`,
       
-      background: brollUrl ? {
-        type: 'video',
-        url: brollUrl,
-        play_style: 'fit_to_scene'
-      } : {
-        type: 'color',
-        value: '#001529', // Deep news blue fallback
-      },
+      mode: 'generate',
+      orientation: 'landscape',
       
-      // Professional news captions
-      caption: {
-        style: captionStyle
-      },
-
-      // Engine configuration
-      engine: {
-        type: engineType
-      },
-
-      aspect_ratio: '16:9',
-      resolution: '1080p'
+      // If we have an audioAssetId (from ElevenLabs), we provide it as a file.
+      files: audioAssetId ? [
+        {
+          type: 'asset_id',
+          asset_id: audioAssetId
+        }
+      ] : []
     };
 
-    console.log(`[AXIS] Submitting V3 Video request with engine: ${engineType}...`);
-    const { data } = await axios.post(`${HEYGEN_BASE}/v3/videos`, payload, { headers });
+    console.log(`[AXIS] Submitting Video Agent request (Auto-generating female avatar)...`);
+    const { data } = await axios.post(`${HEYGEN_BASE}/v3/video-agents`, payload, { headers });
     
-    // Direct Video returns a video_id immediately
-    return data.data.video_id;
+    // Video Agent returns a session_id
+    return data.data.session_id;
   } catch (err: any) {
-    console.error(`[AXIS] HeyGen V3 Video error:`, err.response?.data || err.message || err);
+    console.error(`[AXIS] HeyGen Video Agent error:`, err.response?.data || err.message || err);
     return 'mock_video_id';
   }
 }
 
 /**
- * Polls for the status of a Video.
+ * Polls for the status of a Video Agent session and returns the final video URL.
  */
-export async function pollVideo(videoId: string): Promise<string> {
-  if (videoId === 'mock_video_id') {
+export async function pollVideo(sessionId: string): Promise<string> {
+  if (sessionId === 'mock_video_id') {
     return 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
   }
 
+  let videoId: string | null = null;
   let attempts = 0;
-  while (attempts < 60) { // Max 10 minutes (60 * 10s)
+
+  // Step 1: Wait for the agent to assign a video_id
+  console.log(`[AXIS] Waiting for Video Agent to start rendering...`);
+  while (!videoId && attempts < 20) {
+    try {
+      const { data } = await axios.get(`${HEYGEN_BASE}/v3/video-agents/${sessionId}`, { headers });
+      videoId = data.data.video_id;
+      if (data.data.status === 'failed') throw new Error('Video Agent failed during thinking phase');
+    } catch (err: any) {
+      console.warn('[AXIS] Agent session polling warning:', err.message);
+    }
+    if (!videoId) {
+      attempts++;
+      await new Promise(r => setTimeout(r, 5000));
+    }
+  }
+
+  if (!videoId) throw new Error('Video Agent failed to assign a video ID in time');
+
+  // Step 2: Poll the video itself until completion
+  attempts = 0;
+  while (attempts < 60) {
     try {
       const { data } = await axios.get(`${HEYGEN_BASE}/v3/videos/${videoId}`, { headers });
       const status = data.data.status;
