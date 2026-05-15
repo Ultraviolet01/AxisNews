@@ -28,192 +28,23 @@ const TAG_COLORS: Record<string, string> = {
 const NEWS: any = {
   world: {
     morning: {
-      headline: "Geneva Climate Accord Signed by 147 Nations",
-      lead: "In a landmark moment, 147 world leaders signed the Geneva Accord pledging net-zero emissions by 2040, backed by $500B in green infrastructure funding. AXIS ARIA breaks down what it actually means for your country.",
-      stories: [
-        { title: "UN Security Council Holds Emergency Session on Middle East Ceasefire", src: "Al Jazeera", time: "5:30 AM", tag: "LIVE",      views: "2.1M", hasClip: true  },
-        { title: "Japan 6.4 Earthquake Strikes Hokkaido — Tsunami Watch Lifted",       src: "NHK World", time: "4:12 AM", tag: "ALERT",     views: "1.4M", hasClip: true  },
-        { title: "EU Unveils New Border Management Framework Amid Record Surge",        src: "Euronews",  time: "3:50 AM", tag: "LATEST",    views: "450K", hasClip: false },
-        { title: "India–Pakistan Diplomatic Talks Resume in Dubai After 3 Years",      src: "Reuters",   time: "2:30 AM", tag: "DEVELOPING",views: "890K", hasClip: false },
-      ]
+      headline: "Loading Axis Global Intelligence...",
+      lead: "Fetching latest real-time developments from our global news network. ARIA is curating the top stories for you now.",
+      stories: []
     },
     night: {
-      headline: "World Leaders Depart Geneva — What the Accord Means",
-      lead: "As signatories fly home, analysts dissect the Geneva Accord's enforcement mechanisms, opt-out clauses, and what meaningful compliance actually looks like for the biggest emitters.",
-      stories: [
-        { title: "Post-Summit Analysis: Will Nations Actually Deliver on Pledges?",  src: "The Economist", time: "9:15 PM", tag: "ANALYSIS",  views: "1.2M", hasClip: false },
-        { title: "UN Peacekeeping Force Deployed to Eastern DRC",                     src: "AFP",           time: "8:30 PM", tag: "BREAKING",  views: "760K", hasClip: true  },
-        { title: "Southeast Asian Floods — 50,000 Displaced in Vietnam",              src: "Reuters",       time: "7:45 PM", tag: "ALERT",     views: "1.8M", hasClip: true  },
-        { title: "IAEA Inspectors Denied Access to Iranian Nuclear Site Again",       src: "BBC",           time: "6:20 PM", tag: "DEVELOPING",views: "2.3M", hasClip: false },
-      ]
+      headline: "Loading Axis Global Intelligence...",
+      lead: "Fetching latest real-time developments from our global news network. ARIA is curating the top stories for you now.",
+      stories: []
     }
-  },
-  crypto: {
-    morning: {
-      headline: "Bitcoin Breaks $121K — ETF Inflows Hit $2.3B Single-Day Record",
-      lead: "Bitcoin reached an all-time high overnight as institutional demand through spot ETFs accelerated sharply. On-chain data shows this cycle is structurally different from the 2021 peak. AXIS breaks it down.",
-      stories: [
-        { title: "BTC $121K: What On-Chain Data Says About This Rally",             src: "CoinDesk",    time: "6:00 AM", tag: "BREAKING",  views: "3.2M", hasClip: false, chart:[80,90,88,95,102,110,115,118,121] },
-        { title: "SEC Approves Solana Spot ETF After 18 Months of Review",          src: "The Block",   time: "5:30 AM", tag: "LATEST",    views: "1.9M", hasClip: false, chart:[90,92,95,105,115,120,125,130,133] },
-        { title: "Ethereum Layer-2 TVL Crosses $50 Billion for First Time",         src: "Decrypt",     time: "4:45 AM", tag: "MILESTONE", views: "780K", hasClip: false, chart:[38,40,43,44,46,48,49,50,51] },
-        { title: "Coinbase Reports Record $2.1B Revenue — Stock Surges 18%",        src: "Bloomberg",   time: "4:00 AM", tag: "EARNINGS",  views: "1.1M", hasClip: false },
-      ]
-    },
-    night: {
-      headline: "Bitcoin Consolidates Below $120K — Derivatives Still Bullish",
-      lead: "After reaching $121K this morning, BTC pulled back to the $117K–$119K range as profit-taking set in. Derivatives positioning data suggests bulls remain firmly in control heading into the weekend.",
-      stories: [
-        { title: "BTC Night Outlook: Derivatives Desk Breakdown",                  src: "CoinTelegraph", time: "9:30 PM", tag: "ANALYSIS", views: "1.4M", hasClip: false, chart:[121,120,119,118,117,118,119,118,117] },
-        { title: "Trump Announces 'Strategic National Crypto Reserve' Expansion",  src: "Reuters",       time: "8:45 PM", tag: "ALERT",    views: "4.2M", hasClip: false },
-        { title: "Binance CEO Speaks at Singapore Forum on Regulatory Future",     src: "FT Crypto",     time: "7:30 PM", tag: "LATEST",   views: "890K", hasClip: true  },
-        { title: "DeFi Hack Drains $140M From Cross-Chain Bridge Protocol",        src: "DeFi Pulse",    time: "6:15 PM", tag: "ALERT",    views: "2.7M", hasClip: false },
-      ]
-    }
-  },
-  stocks: {
-    morning: {
-      headline: "S&P 500 Gaps Up 1.8% — Fed Holds, Signals July Cut",
-      lead: "Markets are celebrating after the Federal Reserve held rates steady and Chair Powell hinted economic conditions may warrant a 25bps cut as early as July. Tech and energy led the open.",
-      stories: [
-        { title: "NVIDIA Blows Past Estimates — $44B Revenue, Up 240% YoY",           src: "CNBC",      time: "6:30 AM", tag: "EARNINGS", views: "2.8M", hasClip: true,  chart:[800,820,860,900,940,980,1000,1010,1020] },
-        { title: "Apple Q2 Miss: iPhone Revenue Down 6% — Shares Fall 4%",            src: "WSJ",       time: "6:00 AM", tag: "ALERT",    views: "1.5M", hasClip: false, chart:[190,188,186,184,181,178,174,172,170] },
-        { title: "Stripe Files IPO at $55 — $80B Valuation, Largest Tech Debut of 2026", src: "Bloomberg", time: "5:15 AM", tag: "IPO",  views: "2.3M", hasClip: false },
-        { title: "Energy Sector Rallies 3.2% on OPEC+ Supply Cut Announcement",       src: "Reuters",   time: "4:30 AM", tag: "SECTOR",  views: "670K", hasClip: false, chart:[70,71,72,74,76,78,80,82,84] },
-      ]
-    },
-    night: {
-      headline: "Markets Close Near Session Highs — Nasdaq Up 2.1%",
-      lead: "The S&P 500 closed up 1.4% for the session, with the Nasdaq outperforming at +2.1%. After-hours earnings from Meta and Microsoft are setting up tomorrow's open for more gains.",
-      stories: [
-        { title: "After-Hours: Meta Earnings Beat — Revenue Up 32% to $42B",           src: "CNBC",      time: "9:45 PM", tag: "EARNINGS", views: "2.1M", hasClip: false, chart:[490,500,510,512,520,530,535,540,545] },
-        { title: "Options Market Signals Volatility Ahead of PCE Data Friday",         src: "Bloomberg", time: "8:30 PM", tag: "ANALYSIS", views: "560K", hasClip: false },
-        { title: "Berkshire Hathaway Discloses New $5B Position in Taiwan Semiconductor", src: "FT",    time: "7:00 PM", tag: "LATEST",   views: "1.9M", hasClip: false },
-        { title: "Russell 2000 Underperforms Large-Caps by 1.4% — Warning Sign?",     src: "Barron's",  time: "6:00 PM", tag: "ANALYSIS", views: "430K", hasClip: false },
-      ]
-    }
-  },
-  business: {
-    morning: {
-      headline: "OpenAI Closes $10B Round at $300B Valuation — Largest Ever",
-      lead: "OpenAI's latest funding round led by SoftBank Vision Fund III and Microsoft values the AI lab at $300 billion, making it the most valuable private startup in history by a wide margin.",
-      stories: [
-        { title: "Inside the OpenAI $10B Deal — Who's In and What They Get",          src: "Bloomberg", time: "6:00 AM", tag: "BREAKING", views: "4.1M", hasClip: false },
-        { title: "Stripe IPO Filed — Revenue Hit $7.7B in 2025, Profitable at Last",  src: "WSJ",       time: "5:30 AM", tag: "IPO",      views: "2.3M", hasClip: false },
-        { title: "Amazon Acquires French Logistics Giant Geodis for $8.2B",           src: "FT",        time: "4:45 AM", tag: "LATEST",   views: "670K", hasClip: false },
-        { title: "GM Cuts 5,000 Jobs as EV Transition Continues to Drain Margins",   src: "Reuters",   time: "3:30 AM", tag: "ALERT",    views: "1.4M", hasClip: false },
-      ]
-    },
-    night: {
-      headline: "Big Tech Q1 Sweeps — Microsoft, Alphabet, Meta All Beat",
-      lead: "All three tech giants reported blockbuster Q1 earnings after the bell tonight. AI monetization and cloud expansion drove double-digit revenue growth across the board.",
-      stories: [
-        { title: "Microsoft Cloud Revenue Hits $35B — Azure Up 31% YoY",             src: "CNBC",       time: "9:15 PM", tag: "EARNINGS", views: "1.8M", hasClip: false },
-        { title: "Anthropic Raises $3B Series F — Valuation Reaches $50B",           src: "TechCrunch", time: "8:45 PM", tag: "FUNDING",  views: "2.6M", hasClip: false },
-        { title: "Boeing Crisis Deepens — 737 MAX Production Halted a Third Time",   src: "Reuters",    time: "7:30 PM", tag: "ALERT",    views: "1.2M", hasClip: true  },
-        { title: "Goldman Mandates 5-Day Office Return — Wall Street Follows",       src: "NYT",        time: "6:00 PM", tag: "LATEST",   views: "3.4M", hasClip: false },
-      ]
-    }
-  },
-  politics: {
-    morning: {
-      headline: "US Senate Passes AI Governance Act 78-22 — Historic Vote",
-      lead: "A rare bipartisan majority passed sweeping AI legislation requiring safety audits, transparency disclosures, and model registration for all frontier AI systems. Enforcement begins in 180 days.",
-      stories: [
-        { title: "What the AI Governance Act Actually Mandates — Full Breakdown",    src: "Politico",  time: "6:30 AM", tag: "BREAKING",   views: "3.7M", hasClip: true  },
-        { title: "UK Pre-Election Polls: Labour 58%, Conservatives at Historic Low", src: "Guardian",  time: "5:00 AM", tag: "ELECTION",   views: "1.1M", hasClip: false },
-        { title: "G7 Summit Ends in Stalemate Over China Trade Tariff Dispute",      src: "Reuters",   time: "4:30 AM", tag: "SUMMIT",     views: "760K", hasClip: true  },
-        { title: "French PM Survives No-Confidence Vote by Just 4 Ballots",          src: "Euronews",  time: "3:00 AM", tag: "DEVELOPING", views: "890K", hasClip: false },
-      ]
-    },
-    night: {
-      headline: "White House Signs AI Act Into Law — Tech Giants React",
-      lead: "President Biden signed the AI Governance Act tonight. Reactions from OpenAI, Anthropic, Google, and Meta poured in within minutes. AXIS ARIA breaks down who wins and who loses.",
-      stories: [
-        { title: "AI Companies React to New Law — Winners and Losers Named",      src: "Axios",    time: "9:30 PM", tag: "ANALYSIS",    views: "2.9M", hasClip: false },
-        { title: "China Condemns US AI Regulation as 'Economic Warfare'",         src: "SCMP",     time: "8:15 PM", tag: "ALERT",       views: "1.7M", hasClip: false },
-        { title: "Senate Minority Announces Plans to Challenge Law in Court",     src: "Politico", time: "7:30 PM", tag: "DEVELOPING",  views: "840K", hasClip: false },
-        { title: "EU Considers Aligning With US AI Governance Framework",         src: "Euractiv", time: "6:00 PM", tag: "LATEST",      views: "560K", hasClip: false },
-      ]
-    }
-  },
-  tech: {
-    morning: {
-      headline: "Apple Vision Pro 2 — $2,499, June 2026, 40% Lighter",
-      lead: "Apple unveiled Vision Pro 2 with a groundbreaking neural chip M5 Ultra, 40% lighter form factor, 3-hour battery, and an app ecosystem that's finally ready for mainstream users.",
-      stories: [
-        { title: "Vision Pro 2 Full Specs, Price, and Pre-Order Date Revealed",       src: "The Verge",      time: "6:00 AM", tag: "BREAKING", views: "5.2M", hasClip: true  },
-        { title: "Google DeepMind Gemini 3 Passes All Major AGI Benchmarks",          src: "MIT Tech Review",time: "5:30 AM", tag: "AI",       views: "2.4M", hasClip: false },
-        { title: "SpaceX Starship Completes First Successful Orbital Return Mission", src: "Ars Technica",   time: "4:30 AM", tag: "SPACE",    views: "3.8M", hasClip: true  },
-        { title: "Quantum Computer Solves 10,000-Year Calculation in 4 Minutes",     src: "Nature",         time: "3:45 AM", tag: "LATEST",   views: "6.1M", hasClip: false },
-      ]
-    },
-    night: {
-      headline: "Developers React to Vision Pro 2 — SDK Opens Tonight",
-      lead: "Hours after the announcement, Apple opened the visionOS 3 SDK to all registered developers. Early builds show a spatial computing ecosystem that's finally ready for mass-market apps.",
-      stories: [
-        { title: "visionOS 3 SDK First Impressions — What Devs Are Building",   src: "9to5Mac",   time: "9:00 PM", tag: "AI",      views: "1.6M", hasClip: false },
-        { title: "Meta Responds to Vision Pro 2 With Quest 5 Teaser Video",     src: "Wired",     time: "8:15 PM", tag: "LATEST",  views: "2.1M", hasClip: true  },
-        { title: "GitHub Copilot Adds Autonomous PR Merging — Devs Split",      src: "GitHub",    time: "7:00 PM", tag: "AI",      views: "1.3M", hasClip: false },
-        { title: "OpenAI Releases GPT-5 API to All Tiers — Price Drops 60%",   src: "TechCrunch",time: "6:30 PM", tag: "BREAKING",views: "4.7M", hasClip: false },
-      ]
-    }
-  },
-  sports: {
-    morning: {
-      headline: "UCL Final Tonight — Real Madrid vs Man City in Istanbul",
-      lead: "The two most decorated clubs of the last decade meet under the lights of Istanbul's Atatürk Olympic Stadium. AXIS ARIA previews the tactics, form, and the players who could decide it.",
-      stories: [
-        { title: "Tactical Breakdown: How City's Press Meets Madrid's Deadly Counter", src: "ESPN",       time: "6:30 AM", tag: "PREVIEW", views: "6.1M", hasClip: true },
-        { title: "Celtics Take 3-1 Series Lead Over Knicks in Conference Finals",     src: "ESPN",       time: "5:00 AM", tag: "NBA",     views: "2.7M", hasClip: true },
-        { title: "Monaco GP: Verstappen on Pole After Dramatic Wet Qualifying",       src: "Sky F1",     time: "4:00 AM", tag: "F1",      views: "1.9M", hasClip: true },
-        { title: "19-Year-Old Wildcard Stuns Djokovic in 5 Sets at Wimbledon",       src: "BBC Sport",  time: "3:15 AM", tag: "UPSET",   views: "4.2M", hasClip: true },
-      ]
-    },
-    night: {
-      headline: "Real Madrid Win UCL Final 3-2 — Bellingham Brace Seals It",
-      lead: "A Jude Bellingham masterclass delivered Real Madrid their 16th Champions League title in a pulsating 3-2 victory over Manchester City that will be talked about for decades.",
-      stories: [
-        { title: "UCL Final Full Recap — Goals, Cards, and Player Ratings",      src: "UEFA",      time: "10:30 PM", tag: "RESULT",  views: "18.4M", hasClip: true },
-        { title: "NBA Game 5 Tonight — Celtics Can Clinch at Home",              src: "ESPN",      time: "9:00 PM",  tag: "LIVE",    views: "1.2M",  hasClip: false },
-        { title: "Monaco GP Race-Day Weather Forecast — Rain Expected at Start", src: "F1.com",    time: "8:00 PM",  tag: "F1",      views: "890K",  hasClip: false },
-        { title: "Wimbledon Day 3 — All Top Seeds Advance Comfortably",          src: "ATP Tour",  time: "7:00 PM",  tag: "LATEST",  views: "540K",  hasClip: false },
-      ]
-    }
-  },
-  entertainment: {
-    morning: {
-      headline: "Cannes 2026 Palme d'Or — Korean Debut Film Shocks Festival",
-      lead: "Park Ji-ho's 'Samsara' became only the second debut feature to win the Palme d'Or, delivering a stunning upset over established European auteurs and triggering prolonged standing ovations.",
-      stories: [
-        { title: "Cannes 2026 — Full Winners List and Jury President's Statement", src: "Variety",            time: "6:00 AM", tag: "BREAKING", views: "1.8M", hasClip: true  },
-        { title: "Netflix Q1: 40M New Subscribers, Revenue Up 28% to $11.2B",    src: "Hollywood Reporter", time: "5:30 AM", tag: "LATEST",   views: "890K", hasClip: false },
-        { title: "Taylor Swift 'Eras' Film Sequel Drops on Disney+ Tonight",      src: "Billboard",          time: "4:45 AM", tag: "REVEAL",   views: "7.4M", hasClip: false },
-        { title: "Marvel Phase 6 Slate Officially Revealed — 12 New Films",       src: "Deadline",           time: "3:30 AM", tag: "REVEAL",   views: "5.1M", hasClip: true  },
-      ]
-    },
-    night: {
-      headline: "Oscars 2026 Date Confirmed — 'Samsara' Already Frontrunner",
-      lead: "The Academy confirmed the 2026 Oscars for February 22. Fresh off Cannes, Park Ji-ho's 'Samsara' is being positioned as the Best International Film and surprise Best Picture contender.",
-      stories: [
-        { title: "Early Oscars 2026 Predictions — Who's Building Momentum?",       src: "IndieWire",   time: "9:30 PM", tag: "ANALYSIS", views: "1.3M", hasClip: false },
-        { title: "Beyoncé's 'Cowboy Carter' Tour Breaks 3 Stadium Attendance Records", src: "Rolling Stone", time: "8:15 PM", tag: "LATEST", views: "6.2M", hasClip: true },
-        { title: "HBO's 'The Last of Us' Season 3 Trailer Breaks 24-Hour View Record", src: "Deadline", time: "7:00 PM", tag: "REVEAL", views: "12.1M", hasClip: true },
-        { title: "X Acquires TikTok US Operations for $3.5B — Musk Reacts",       src: "Variety",     time: "6:30 PM", tag: "BREAKING", views: "8.9M", hasClip: false },
-      ]
-    }
-  },
+  }
 };
 
 const TICKER = [
-  "🔴 BREAKING: Bitcoin hits $121,400 ATH — spot ETF inflows at $2.3B",
-  "📈 S&P 500 up 1.8% — Fed holds, signals July cut",
-  "🌍 Geneva Climate Accord signed by 147 nations",
-  "⚽ UCL Final tonight: Real Madrid vs Manchester City in Istanbul",
-  "🤖 US Senate passes AI Governance Act 78-22 — historic bipartisan vote",
-  "🚀 SpaceX Starship completes first successful orbital return",
-  "🎬 Cannes Palme d'Or: Korean debut film 'Samsara' stuns festival",
-  "📱 Apple Vision Pro 2 at $2,499 — ships June 2026",
-  "💰 OpenAI raises $10B at $300B valuation — largest private raise ever",
+  "🌐 AXIS ARIA: Real-time news curation engine active",
+  "📈 Market Sentiment: Analyzing latest moves across Global Exchanges",
+  "⚡ Breaking: Dynamic headlines are fetched and curated every 120 minutes",
+  "🎙️ Live: ARIA interactive session available for every story",
 ];
 
 export default function AxisNews() {
@@ -415,7 +246,7 @@ export default function AxisNews() {
         </div>
         <div style={{ overflow:"hidden", flex:1 }}>
           <div style={{ display:"flex", animation:"marquee 40s linear infinite", whiteSpace:"nowrap" }}>
-            {[...TICKER,...TICKER].map((t,i)=>(
+            {(newsData?.stories?.length ? newsData.stories.map((s: any) => `🔴 ${s.tag}: ${s.title}`) : TICKER).concat(newsData?.stories?.length ? newsData.stories.map((s: any) => `🔴 ${s.tag}: ${s.title}`) : TICKER).map((t,i)=>(
               <span key={i} style={{ fontSize:"12px", color:"rgba(255,255,255,.65)", marginRight:"56px" }}>{t}</span>
             ))}
           </div>
