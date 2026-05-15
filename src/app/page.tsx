@@ -281,7 +281,7 @@ export default function AxisNews() {
         </div>
         <div style={{ overflow:"hidden", flex:1 }}>
           <div style={{ display:"flex", animation:"marquee 40s linear infinite", whiteSpace:"nowrap" }}>
-            {(newsData?.stories?.length ? newsData.stories.map((s: any) => `🔴 ${s.tag}: ${s.title}`) : TICKER).concat(newsData?.stories?.length ? newsData.stories.map((s: any) => `🔴 ${s.tag}: ${s.title}`) : TICKER).map((t,i)=>(
+            {(newsData?.stories?.length ? newsData.stories.map((s: any) => `🔴 ${s.tag}: ${s.title}`) : TICKER).concat(newsData?.stories?.length ? newsData.stories.map((s: any) => `🔴 ${s.tag}: ${s.title}`) : TICKER).map((t: string, i: number)=>(
               <span key={i} style={{ fontSize:"12px", color:"rgba(255,255,255,.65)", marginRight:"56px" }}>{t}</span>
             ))}
           </div>
