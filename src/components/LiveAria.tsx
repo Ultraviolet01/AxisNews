@@ -49,6 +49,7 @@ export function LiveAria({ section, accent, onClose, initialScript }: LiveAriaPr
 
   return (
     <div
+      className="live-aria-overlay"
       style={{
         position: 'fixed',
         inset: 0,
@@ -63,7 +64,17 @@ export function LiveAria({ section, accent, onClose, initialScript }: LiveAriaPr
       }}
       onClick={(e) => { if (e.target === e.currentTarget) { stopSession(); onClose(); } }}
     >
+      <style>{`
+        @media (max-width: 800px) {
+          .live-aria-overlay { padding: 10px !important; }
+          .live-aria-modal { border-radius: 0 !important; height: 100vh !important; }
+          .live-aria-grid { grid-template-columns: 1fr !important; }
+          .live-aria-side { border-left: none !important; border-top: 1px solid rgba(255,255,255,.05) !important; padding: 12px !important; }
+          .live-aria-video { aspect-ratio: 1/1 !important; }
+        }
+      `}</style>
       <div
+        className="live-aria-modal"
         style={{
           width: '100%',
           maxWidth: '860px',
@@ -134,9 +145,10 @@ export function LiveAria({ section, accent, onClose, initialScript }: LiveAriaPr
         </div>
 
         {/* Video + Controls */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px' }}>
+        <div className="live-aria-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 320px' }}>
           {/* Avatar Video */}
           <div
+            className="live-aria-video"
             style={{
               position: 'relative',
               background: '#050508',
@@ -275,6 +287,7 @@ export function LiveAria({ section, accent, onClose, initialScript }: LiveAriaPr
 
           {/* Right panel — Q&A controls */}
           <div
+            className="live-aria-side"
             style={{
               borderLeft: '1px solid rgba(255,255,255,.05)',
               display: 'flex',
