@@ -1,86 +1,105 @@
 import axios from 'axios';
 
 const HEYGEN_BASE = 'https://api.heygen.com';
-const headers = { 'X-Api-Key': process.env.HEYGEN_API_KEY || '', 'Content-Type': 'application/json' };
+const headers = { 
+  'X-Api-Key': process.env.HEYGEN_API_KEY || '', 
+  'Content-Type': 'application/json' 
+};
 
 /**
- * Creates a video using the HeyGen V3 Video Agent API or Direct Video API.
- * Now supports passing an audioAssetId for ElevenLabs integration.
+ * Creates a video using the HeyGen V3 Direct Video API.
+ * This API provides maximum control over the avatar, engine, and backgrounds.
  */
 export async function createBroadcast(promptOrScript: string, brollUrl: string, audioAssetId?: string): Promise<string> {
   try {
-    const avatarId = process.env.HEYGEN_AVATAR_ID || 'Aria_in_a_suit_front'; 
+    const avatarId = process.env.HEYGEN_AVATAR_ID || 'Aria_in_a_suit_front';
+    const engineType = process.env.HEYGEN_ENGINE || 'avatar_iv'; // 'avatar_v' for high quality
+    const captionStyle = process.env.HEYGEN_CAPTION_STYLE || 'default';
 
-    // If we have an audioAssetId, we MUST use the Direct Video API (/v3/videos)
-    // because Video Agents currently generate their own audio from prompt.
-    if (audioAssetId) {
-      const payload: any = {
-        type: 'avatar',
-        avatar_id: avatarId,
-        audio_asset_id: audioAssetId,
-        background: brollUrl ? {
-          type: 'video',
-          url: brollUrl,
-          play_style: 'fit_to_scene'
-        } : {
-          type: 'image',
-          url: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&q=80&w=2070',
-        }
-      };
+    const payload: any = {
+      type: 'avatar',
+      avatar_id: avatarId,
+      // If we have pre-recorded audio (from ElevenLabs), use it. 
+      // Otherwise, we fallback to text-to-speech script.
+      ...(audioAssetId ? { audio_asset_id: audioAssetId } : { script: promptOrScript }),
+      
+      background: brollUrl ? {
+        type: 'video',
+        url: brollUrl,
+        play_style: 'fit_to_scene'
+      } : {
+        type: 'color',
+        value: '#001529', // Deep news blue fallback
+      },
+      
+      // Professional news captions
+      caption: {
+        style: captionStyle
+      },
 
-      const { data } = await axios.post(`${HEYGEN_BASE}/v3/videos`, payload, { headers });
-      return data.data.video_id;
-    }
+      // Engine configuration
+      engine: {
+        type: engineType
+      },
 
-    // Default to Video Agent for prompt-based generation (if no ElevenLabs)
-    const payload = {
-      prompt: `A professional news broadcast about: ${promptOrScript}. The anchor should be a professional news presenter. ${brollUrl ? `Use this visual style: ${brollUrl}` : ''}`,
-      mode: 'generate',
+      aspect_ratio: '16:9',
+      resolution: '1080p'
     };
 
-    const { data } = await axios.post(`${HEYGEN_BASE}/v3/video-agents`, payload, { headers });
+    console.log(`[AXIS] Submitting V3 Video request with engine: ${engineType}...`);
+    const { data } = await axios.post(`${HEYGEN_BASE}/v3/videos`, payload, { headers });
     
-    // Video Agent returns a session_id
-    return data.data.session_id;
+    // Direct Video returns a video_id immediately
+    return data.data.video_id;
   } catch (err: any) {
-    console.error(`[AXIS] HeyGen Video Agent error:`, err.response?.data || err.message || err);
+    console.error(`[AXIS] HeyGen V3 Video error:`, err.response?.data || err.message || err);
     return 'mock_video_id';
   }
 }
 
 /**
- * Polls for the status of a Video Agent session.
+ * Polls for the status of a Video.
  */
-export async function pollVideo(sessionId: string): Promise<string> {
-  if (sessionId === 'mock_video_id') {
+export async function pollVideo(videoId: string): Promise<string> {
+  if (videoId === 'mock_video_id') {
     return 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
   }
 
-  while (true) {
+  let attempts = 0;
+  while (attempts < 60) { // Max 10 minutes (60 * 10s)
     try {
-      const { data } = await axios.get(`${HEYGEN_BASE}/v3/video-agents/${sessionId}`, { headers });
+      const { data } = await axios.get(`${HEYGEN_BASE}/v3/videos/${videoId}`, { headers });
       const status = data.data.status;
       
-      // If the agent has produced a video_id, we can return that or wait for completion
-      if (status === 'completed' && data.data.video_id) {
-         // Get the final video URL
-         const videoRes = await axios.get(`${HEYGEN_BASE}/v3/videos/${data.data.video_id}`, { headers });
-         return videoRes.data.data.video_url;
+      if (status === 'completed') {
+         console.log(`[AXIS] Video ${videoId} is READY!`);
+         return data.data.video_url;
       }
       
-      if (status === 'failed') throw new Error('Video Agent session failed');
+      if (status === 'failed') {
+        const error = data.data.failure_message || 'Unknown error';
+        throw new Error(`HeyGen rendering failed: ${error}`);
+      }
       
-      console.log(`[AXIS] Video Agent status: ${status}...`);
+      console.log(`[AXIS] Video ${videoId} status: ${status}...`);
     } catch (err: any) {
-      console.warn('[AXIS] Video Agent polling failed:', err.message);
+      console.warn('[AXIS] Video polling warning:', err.message);
+      if (err.message.includes('failed')) throw err;
     }
-    await new Promise(r => setTimeout(r, 5000));
+    
+    attempts++;
+    await new Promise(r => setTimeout(r, 10000));
   }
+  
+  throw new Error('Video polling timed out');
 }
 
+/**
+ * Uploads an audio buffer to HeyGen assets.
+ */
 export async function uploadAudio(audioBuffer: Buffer): Promise<string> {
   try {
-    const { data } = await axios.post(`${HEYGEN_BASE}/v1/asset.upload`, audioBuffer, {
+    const { data } = await axios.post(`${HEYGEN_BASE}/v3/assets`, audioBuffer, {
       headers: {
         ...headers,
         'Content-Type': 'audio/mpeg'
@@ -91,11 +110,4 @@ export async function uploadAudio(audioBuffer: Buffer): Promise<string> {
     console.error(`[AXIS] HeyGen audio upload error:`, err.response?.data || err.message || err);
     throw err;
   }
-}
-
-
-
-async function pollVideoLegacy(videoId: string): Promise<string> {
-  const { data } = await axios.get(`${HEYGEN_BASE}/v1/video_status.get?video_id=${videoId}`, { headers });
-  return data.data.video_url;
 }
